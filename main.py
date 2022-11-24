@@ -1,12 +1,20 @@
-
-
 if __name__ == '__main__':
     from Sammler import Sammler
     from Lager import Lager
     import time
-    # from pickle
+    import pickle
+    import os
 
-    goldlager = Lager("Goldlager 1")
+    path = "coc_data.p"
+    isExist = os.path.exists(path)
+    if isExist:
+        with open("coc_data.p", "rb") as file:
+            goldlager, goldMine0 = pickle.load(file)
+            print("... wurde geladen")
+    else:
+        goldMine0 = Sammler("Miene für Gold")
+        goldlager = Lager("Goldlager 1")
+
     diff_sec = 0
 
     end = False
@@ -17,16 +25,18 @@ if __name__ == '__main__':
 
         diff_sec += (in_seconds_after - in_seconds_before)
 
-        goldMine0 = Sammler("Miene für Gold")
         # print(goldMine0.getZustand_Sammler())
-
         print(goldlager.getZustand_lager(goldMine0.runningKapazitaet(diff_sec)))
-        # print(goldlager.levelUp_Zustand())
+        print(goldlager.levelUp_Zustand_Gebaeude())
 
         diff_sec = 0
         print()
         if input_user != "#":
             end = True
+            # pickle
+            data = goldlager, goldMine0
+            with open("coc_data.p", "wb") as file:
+                pickle.dump(data, file)
             break
         if input_user == "":
             end = False
